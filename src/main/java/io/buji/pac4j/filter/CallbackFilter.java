@@ -39,7 +39,8 @@ import static org.pac4j.core.util.CommonHelper.assertNotNull;
  * <p>This filter finishes the login process for an indirect client, based on the {@link #callbackLogic}.</p>
  *
  * <p>The configuration can be provided via setter methods: {@link #setConfig(Config)} (security configuration),
- * {@link #setDefaultUrl(String)} (default url after login if none was requested) and {@link #setMultiProfile(Boolean)} (whether multiple profiles should be kept).</p>
+ * {@link #setDefaultUrl(String)} (default url after login if none was requested) {@link #setSaveInSession(Boolean)} (whether profiles should be stored into session)
+ * and {@link #setMultiProfile(Boolean)} (whether multiple profiles should be kept).</p>
  *
  * @author Jerome Leleu
  * @since 2.0.0
@@ -51,6 +52,8 @@ public class CallbackFilter implements Filter {
     private Config config;
 
     private String defaultUrl;
+
+    private Boolean saveInSession;
 
     private Boolean multiProfile;
 
@@ -76,7 +79,7 @@ public class CallbackFilter implements Filter {
         final J2EContext context = new J2EContext(request, response, sessionStore != null ? sessionStore : ShiroSessionStore.INSTANCE);
         final HttpActionAdapter<Object, J2EContext> adapter = httpActionAdapter != null ? httpActionAdapter : J2ENopHttpActionAdapter.INSTANCE;
 
-        callbackLogic.perform(context, config, adapter, this.defaultUrl, this.multiProfile, false);
+        callbackLogic.perform(context, config, adapter, this.defaultUrl, this.saveInSession, this.multiProfile, false);
     }
 
     @Override
@@ -106,6 +109,14 @@ public class CallbackFilter implements Filter {
         this.defaultUrl = defaultUrl;
     }
 
+    public Boolean getSaveInSession() {
+        return saveInSession;
+    }
+
+    public void setSaveInSession(Boolean saveInSession) {
+        this.saveInSession = saveInSession;
+    }
+
     public Boolean getMultiProfile() {
         return multiProfile;
     }
@@ -122,3 +133,4 @@ public class CallbackFilter implements Filter {
         this.httpActionAdapter = httpActionAdapter;
     }
 }
+
