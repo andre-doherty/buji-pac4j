@@ -18,22 +18,29 @@
  */
 package io.buji.pac4j.filter;
 
-import io.buji.pac4j.context.ShiroSessionStore;
-import io.buji.pac4j.profile.ShiroProfileManager;
+import static org.pac4j.core.util.CommonHelper.assertNotNull;
+
+import java.io.IOException;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.pac4j.core.config.Config;
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.engine.CallbackLogic;
 import org.pac4j.core.engine.DefaultCallbackLogic;
-import org.pac4j.core.http.HttpActionAdapter;
-import org.pac4j.core.http.J2ENopHttpActionAdapter;
+import org.pac4j.core.http.adapter.HttpActionAdapter;
+import org.pac4j.core.http.adapter.J2ENopHttpActionAdapter;
 
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-
-import static org.pac4j.core.util.CommonHelper.assertNotNull;
+import io.buji.pac4j.context.ShiroSessionStore;
+import io.buji.pac4j.profile.ShiroProfileManager;
 
 /**
  * <p>This filter finishes the login process for an indirect client, based on the {@link #callbackLogic}.</p>
@@ -79,7 +86,7 @@ public class CallbackFilter implements Filter {
         final J2EContext context = new J2EContext(request, response, sessionStore != null ? sessionStore : ShiroSessionStore.INSTANCE);
         final HttpActionAdapter<Object, J2EContext> adapter = httpActionAdapter != null ? httpActionAdapter : J2ENopHttpActionAdapter.INSTANCE;
 
-        callbackLogic.perform(context, config, adapter, this.defaultUrl, this.saveInSession, this.multiProfile, false);
+        callbackLogic.perform(context, config, adapter, this.defaultUrl, this.saveInSession, this.multiProfile, false, null); //TODO client from request ?
     }
 
     @Override

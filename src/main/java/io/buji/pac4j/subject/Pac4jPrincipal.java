@@ -29,7 +29,7 @@ import java.util.List;
 
 /**
  * A principal created by Pac4JRealm that wraps a CommonProfile.
- * 
+ *
  * @author Jerome Leleu
  * @since 2.0.0
  */
@@ -39,9 +39,9 @@ public class Pac4jPrincipal implements Principal, Serializable {
     private final LinkedHashMap<String, CommonProfile> profiles;
 
     /**
-     * Construct a Pac4jPrincipal.  The principal name returned will be 
+     * Construct a Pac4jPrincipal.  The principal name returned will be
      * CommonProfile.getId().
-     * 
+     *
      * @param profiles A map containing all of the CommonProfiles created by Pac4j
      *          authorization.
      */
@@ -49,14 +49,14 @@ public class Pac4jPrincipal implements Principal, Serializable {
         this.profiles = profiles;
         this.principalNameAttribute = null;
     }
-    
+
     /**
      * Construct a Pac4jPrincipal and specify which attribute in the CommonProfile
      * should be used for the principal name.
-     * 
+     *
      * @param profiles A map containing all of the CommonProfiles created by Pac4j
      *          authorization.
-     * @param principalNameAttribute The attribute name in the CommonProfile that 
+     * @param principalNameAttribute The attribute name in the CommonProfile that
      *          holds the principal name. A null or blank value means
      *          that CommonProfile.getId() should be used as the principal name.
      */
@@ -72,7 +72,7 @@ public class Pac4jPrincipal implements Principal, Serializable {
      * @return the main profile
      */
     public CommonProfile getProfile() {
-        return ProfileHelper.flatIntoOneProfile(this.profiles).get();
+        return ProfileHelper.flatIntoOneProfile(this.profiles.values()).get();
     }
 
     /**
@@ -100,9 +100,9 @@ public class Pac4jPrincipal implements Principal, Serializable {
 
     /**
      * Returns a name for the principal based upon one of the attributes
-     * of the main CommonProfile.  The attribute name used to query the CommonProfile 
-     * is specified in the constructor. 
-     * 
+     * of the main CommonProfile.  The attribute name used to query the CommonProfile
+     * is specified in the constructor.
+     *
      * @return a name for the Principal or null if the attribute is not populated.
      */
     @Override
@@ -117,6 +117,6 @@ public class Pac4jPrincipal implements Principal, Serializable {
 
     @Override
     public String toString() {
-        return CommonHelper.toString(this.getClass(), "profiles", getProfiles());
+        return CommonHelper.toNiceString(this.getClass(), "profiles", getProfiles());
     }
 }

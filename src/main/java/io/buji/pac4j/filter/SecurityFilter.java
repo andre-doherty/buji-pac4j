@@ -18,21 +18,28 @@
  */
 package io.buji.pac4j.filter;
 
-import io.buji.pac4j.context.ShiroSessionStore;
-import io.buji.pac4j.profile.ShiroProfileManager;
+import static org.pac4j.core.util.CommonHelper.assertNotNull;
+
+import java.io.IOException;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.pac4j.core.config.Config;
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.engine.DefaultSecurityLogic;
 import org.pac4j.core.engine.SecurityLogic;
-import org.pac4j.core.http.J2ENopHttpActionAdapter;
+import org.pac4j.core.http.adapter.J2ENopHttpActionAdapter;
 
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-
-import static org.pac4j.core.util.CommonHelper.*;
+import io.buji.pac4j.context.ShiroSessionStore;
+import io.buji.pac4j.profile.ShiroProfileManager;
 
 /**
  * <p>This filter protects an url, based on the {@link #securityLogic}.</p>
@@ -76,7 +83,7 @@ public class SecurityFilter implements Filter {
         final SessionStore<J2EContext> sessionStore = config.getSessionStore();
         final J2EContext context = new J2EContext(request, response, sessionStore != null ? sessionStore : ShiroSessionStore.INSTANCE);
 
-        securityLogic.perform(context, config, (ctx, parameters) -> {
+        securityLogic.perform(context, config, (ctx, profiles, parameters) -> {
 
             filterChain.doFilter(request, response);
             return null;
